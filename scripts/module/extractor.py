@@ -83,7 +83,7 @@ class DataExtractor():
         self.processed_data.to_csv(r'output.csv')
         print("Output Complete!")
                 
-    def output_province_confirmed(self, provinces, MAs, MAcolor):
+    def output_province_confirmed(self, provinces, MAs, MAcolor, output_folder):
         
         '''
             ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California',
@@ -119,7 +119,7 @@ class DataExtractor():
             fig, ax = plt.subplots(figsize=(16, 8))
             ax.plot(self.timeseries, confirmed_timeseries, label="daily confirmed", color=(190/255, 190/255, 190/255))
             
-            
+            # Calculate MA
             for m in range(0, len(MAs)):
                 ma_list = []
                 for i in range(MAs[m], len(self.timeseries)):
@@ -130,12 +130,10 @@ class DataExtractor():
                     ma_list.append(int(d / MAs[m]))
                 ax.plot(ma_list, label="{}MA".format(MAs[m]), color=MAcolor[m])
                 
-            
-            
             plt.xticks(np.arange(10, len(self.timeseries), 31.0), rotation=40)
             plt.title("Daily confirmed trend of {}".format(province))
             plt.legend()
-            plt.show()   
+            plt.savefig(os.path.join(output_folder, province+"_confirmed.png"))   
             
     def get_province_data(self, province):          
         interval_county_confirmed = []
